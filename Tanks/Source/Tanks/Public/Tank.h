@@ -7,6 +7,8 @@
 #include "TankAimingComponent.h"
 #include "Tank.generated.h"
 
+class UTankBarrel;
+
 UCLASS()
 class TANKS_API ATank : public APawn
 {
@@ -16,9 +18,6 @@ public:
 	// Sets default values for this pawn's properties
 	ATank();
 
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -26,11 +25,15 @@ public:
 
 	// The barrel to move about when aiming.
 	UFUNCTION(BlueprintCallable, Category = Setup)
-	void SetBarrel(UStaticMeshComponent* barrelToSet);
+	void SetBarrel(UTankBarrel* barrel);
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	UTankAimingComponent* AimingComponent = nullptr;
+
+private:
+	UPROPERTY(EditAnywhere, Category = Firing)
+	float LaunchSpeed = 10000; // TODO: Find sensible default
 };
