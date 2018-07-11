@@ -31,6 +31,11 @@ void ATank::AimAt(FVector const & location)
 	AimingComponent->AimAt(location, LaunchSpeed);
 }
 
+void ATank::Fire()
+{
+	UE_LOG(LogTemp, Error, TEXT(" -=- FIRE! -=-"))
+}
+
 void ATank::SetMeshComponents(UTankBarrel * barrel, UTankTurret* turret)
 {
 	AimingComponent->SetMeshComponents(barrel, turret);

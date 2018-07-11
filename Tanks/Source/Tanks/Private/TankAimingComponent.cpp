@@ -42,10 +42,6 @@ void UTankAimingComponent::AimAt(FVector const & hitLocation, float launchSpeed)
 	{
 		PointBarrelAt(launchVelocity.GetSafeNormal());
 	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("No aiming solution."))
-	}
 }
 
 void UTankAimingComponent::PointBarrelAt(FVector const & aimDirection)

@@ -23,6 +23,9 @@ public:
 
 	void AimAt(FVector const & location);
 
+	UFUNCTION(BlueprintCallable, Category = Firing)
+	void Fire();
+
 	// The barrel to move about when aiming.
 	UFUNCTION(BlueprintCallable, Category = Setup)
 	void SetMeshComponents(UTankBarrel* barrel, UTankTurret* turret);
