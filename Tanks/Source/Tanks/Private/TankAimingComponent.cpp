@@ -3,6 +3,7 @@
 #include "TankAimingComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "TankBarrel.h"
+#include "TankTurret.h"
 
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
@@ -14,9 +15,10 @@ UTankAimingComponent::UTankAimingComponent()
 	// ...
 }
 
-void UTankAimingComponent::SetBarrel(UTankBarrel* barrel)
+void UTankAimingComponent::SetMeshComponents(UTankBarrel* barrel, UTankTurret* turret)
 {
 	Barrel = barrel;
+	Turret = turret;
 }
 
 void UTankAimingComponent::AimAt(FVector const & hitLocation, float launchSpeed)
@@ -38,8 +40,7 @@ void UTankAimingComponent::AimAt(FVector const & hitLocation, float launchSpeed)
 		ESuggestProjVelocityTraceOption::DoNotTrace
 	))
 	{
-		const FVector aimDirection = launchVelocity.GetSafeNormal();
-		MoveBarrelTowards(aimDirection);
+		PointBarrelAt(launchVelocity.GetSafeNormal());
 	}
 	else
 	{
@@ -47,12 +48,12 @@ void UTankAimingComponent::AimAt(FVector const & hitLocation, float launchSpeed)
 	}
 }
 
-void UTankAimingComponent::MoveBarrelTowards(FVector const & aimDirection)
+void UTankAimingComponent::PointBarrelAt(FVector const & aimDirection)
 {
-	// Work out difference between current barrel rotation and aim direction
-	const FRotator barrelRotation = Barrel->GetForwardVector().Rotation();
-	const FRotator aimRotator = aimDirection.Rotation();
-	const FRotator deltaRotator = aimRotator - barrelRotation;
-	
-	Barrel->Elevate(5.0f);
+	const auto barrelRotator = Barrel->GetForwardVector().ToOrientationRotator();
+	const auto aimRotator = aimDirection.ToOrientationRotator();
+	const auto deltaRotator = aimRotator - barrelRotator;
+
+	Barrel->Elevate( deltaRotator.Pitch );
+	Turret->Rotate ( deltaRotator.Yaw   );
 }

@@ -31,7 +31,7 @@ void ATank::AimAt(FVector const & location)
 	AimingComponent->AimAt(location, LaunchSpeed);
 }
 
-void ATank::SetBarrel(UTankBarrel * barrel)
+void ATank::SetMeshComponents(UTankBarrel * barrel, UTankTurret* turret)
 {
-	AimingComponent->SetBarrel(barrel);
+	AimingComponent->SetMeshComponents(barrel, turret);
 }

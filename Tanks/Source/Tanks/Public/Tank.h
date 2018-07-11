@@ -25,7 +25,7 @@ public:
 
 	// The barrel to move about when aiming.
 	UFUNCTION(BlueprintCallable, Category = Setup)
-	void SetBarrel(UTankBarrel* barrel);
+	void SetMeshComponents(UTankBarrel* barrel, UTankTurret* turret);
 
 protected:
 	// Called when the game starts or when spawned
@@ -35,5 +35,5 @@ protected:
 
 private:
 	UPROPERTY(EditAnywhere, Category = Firing)
-	float LaunchSpeed = 10000; // TODO: Find sensible default
+	float LaunchSpeed = 4000;
 };
