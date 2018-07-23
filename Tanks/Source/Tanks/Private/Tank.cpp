@@ -4,6 +4,10 @@
 #include "TankBarrel.h"
 #include "Projectile.h"
 #include "Engine/World.h"
+#include "Particles/ParticleSystem.h"
+#include "Kismet/GameplayStatics.h"
+#include "TankAimingComponent.h"
+#include "TankMovementComponent.h"
 
 // Sets default values
 ATank::ATank() :
@@ -34,25 +38,48 @@ void ATank::AimAt(FVector const & location)
 
 void ATank::Fire()
 {
-	if (!Barrel)
+	if (Barrel && IsReloaded())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Can't fire: No barrel set!"));
-		return;
+		const FName socketName("Projectile");
+
+		const auto projectile = GetWorld()->SpawnActor<AProjectile>(
+			ProjectileBlueprint,
+			Barrel->GetSocketLocation(socketName),
+			Barrel->GetSocketRotation(socketName)
+			);
+
+		projectile->Launch(LaunchSpeed);
+
+		LastFireTime = GetWorld()->GetTimeSeconds();
+
+		if (MuzzleFlash)
+		{
+			UGameplayStatics::SpawnEmitterAtLocation(
+				GetWorld(),
+				MuzzleFlash,
+				FTransform(
+					Barrel->GetSocketRotation(socketName),
+					Barrel->GetSocketLocation(socketName),
+					FVector::OneVector
+				),
+				true
+			);
+		}
 	}
-
-	const FName socketName("Projectile");
-
-	const auto projectile = GetWorld()->SpawnActor<AProjectile>(
-		ProjectileBlueprint,
-		Barrel->GetSocketLocation(socketName),
-		Barrel->GetSocketRotation(socketName)
-	);
-
-	projectile->Launch(LaunchSpeed);
 }
 
 void ATank::SetMeshComponents(UTankBarrel* barrel, UTankTurret* turret)
 {
 	AimingComponent->SetMeshComponents(barrel, turret);
 	Barrel = barrel;
+}
+
+void ATank::SetMuzzleFlash(UParticleSystem * muzzleFlash)
+{
+	MuzzleFlash = muzzleFlash;
+}
+
+bool ATank::IsReloaded() const
+{
+	return (GetWorld()->GetTimeSeconds() - LastFireTime) > ReloadTimeInSeconds;
 }

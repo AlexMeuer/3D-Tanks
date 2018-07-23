@@ -4,11 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "TankAimingComponent.h"
 #include "Tank.generated.h"
 
 class UTankBarrel;
 class AProjectile;
+class UTankAimingComponent;
+class UTankMovementComponent;
 
 UCLASS()
 class TANKS_API ATank : public APawn
@@ -31,19 +32,36 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Setup)
 	void SetMeshComponents(UTankBarrel* barrel, UTankTurret* turret);
 
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	void SetMuzzleFlash(UParticleSystem* muzzleFlash);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	UTankAimingComponent* AimingComponent = nullptr;
 
+	UPROPERTY(BlueprintReadOnly)
+	UTankMovementComponent* MovementComponent = nullptr;
+
 private:
-	UPROPERTY(EditAnywhere, Category = Firing)
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
+	TSubclassOf<AProjectile> ProjectileBlueprint;
+
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
 	float LaunchSpeed = 4000;
 
-	UPROPERTY(EditAnywhere, Category = Setup)
-	TSubclassOf<AProjectile> ProjectileBlueprint;
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+	float ReloadTimeInSeconds = 3.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+	UParticleSystem* MuzzleFlash = nullptr;
 
 	// Use to spawn projectiles.
 	UTankBarrel* Barrel = nullptr;
+
+	float LastFireTime = 0.f;
+
+private:
+	bool IsReloaded() const;
 };
