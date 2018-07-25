@@ -5,8 +5,6 @@
 
 void UTankTrack::SetThrottle(float throttle)
 {
-	// TODO: Clamp throttle value (-1, +1)
-	
 	const auto forceApplied = GetForwardVector() * throttle * MaxDrivingForce;
 
 	const auto forceLocation = GetComponentLocation();

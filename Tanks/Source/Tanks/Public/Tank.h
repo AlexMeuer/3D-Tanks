@@ -10,6 +10,7 @@ class UTankBarrel;
 class AProjectile;
 class UTankAimingComponent;
 class UTankMovementComponent;
+class UParticleSystemComponent;
 
 UCLASS()
 class TANKS_API ATank : public APawn
@@ -33,7 +34,7 @@ public:
 	void SetMeshComponents(UTankBarrel* barrel, UTankTurret* turret);
 
 	UFUNCTION(BlueprintCallable, Category = Setup)
-	void SetMuzzleFlash(UParticleSystem* muzzleFlash);
+	void SetMuzzleFlash(UParticleSystemComponent* muzzleFlash);
 
 protected:
 	// Called when the game starts or when spawned
@@ -55,7 +56,7 @@ private:
 	float ReloadTimeInSeconds = 3.f;
 
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
-	UParticleSystem* MuzzleFlash = nullptr;
+	UParticleSystemComponent* MuzzleFlash = nullptr;
 
 	// Use to spawn projectiles.
 	UTankBarrel* Barrel = nullptr;

@@ -21,3 +21,13 @@ void UTankMovementComponent::IntendMoveForward(float axisThrow)
 	// TODO: Prevent double speed due to dual control use.
 }
 
+void UTankMovementComponent::IntendTurnRight(float axisThrow)
+{
+	if (!LeftTrack || !RightTrack) { return; }
+
+	LeftTrack->SetThrottle(axisThrow);
+	RightTrack->SetThrottle(-axisThrow);
+
+	// TODO: Prevent double speed due to dual control use.
+}
+

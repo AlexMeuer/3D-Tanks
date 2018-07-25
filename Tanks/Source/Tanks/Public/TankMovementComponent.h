@@ -23,6 +23,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = FlyByWire)
 	void IntendMoveForward(float axisThrow);
 
+	UFUNCTION(BlueprintCallable, Category = FlyByWire)
+	void IntendTurnRight(float axisThrow);
+
 private:
 	UTankTrack* LeftTrack = nullptr;
 	UTankTrack* RightTrack = nullptr;

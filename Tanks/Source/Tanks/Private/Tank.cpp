@@ -4,8 +4,8 @@
 #include "TankBarrel.h"
 #include "Projectile.h"
 #include "Engine/World.h"
-#include "Particles/ParticleSystem.h"
 #include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "TankAimingComponent.h"
 #include "TankMovementComponent.h"
 
@@ -54,16 +54,7 @@ void ATank::Fire()
 
 		if (MuzzleFlash)
 		{
-			UGameplayStatics::SpawnEmitterAtLocation(
-				GetWorld(),
-				MuzzleFlash,
-				FTransform(
-					Barrel->GetSocketRotation(socketName),
-					Barrel->GetSocketLocation(socketName),
-					FVector::OneVector
-				),
-				true
-			);
+			MuzzleFlash->ActivateSystem();
 		}
 	}
 }
@@ -74,7 +65,7 @@ void ATank::SetMeshComponents(UTankBarrel* barrel, UTankTurret* turret)
 	Barrel = barrel;
 }
 
-void ATank::SetMuzzleFlash(UParticleSystem * muzzleFlash)
+void ATank::SetMuzzleFlash(UParticleSystemComponent* muzzleFlash)
 {
 	MuzzleFlash = muzzleFlash;
 }
