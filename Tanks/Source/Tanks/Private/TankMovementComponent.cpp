@@ -31,3 +31,12 @@ void UTankMovementComponent::IntendTurnRight(float axisThrow)
 	// TODO: Prevent double speed due to dual control use.
 }
 
+void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed)
+{
+	const auto tankForward = GetOwner()->GetActorForwardVector().GetSafeNormal();
+	const auto forwardIntention = MoveVelocity.GetSafeNormal();
+	
+	const auto forwardThrow = FVector::DotProduct(tankForward, forwardIntention);
+
+	IntendMoveForward(forwardThrow);
+}

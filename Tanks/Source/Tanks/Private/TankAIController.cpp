@@ -17,10 +17,13 @@ void ATankAIController::AimTowardPlayerTank()
 	ATank* const controlledTank = Cast<ATank>(GetPawn());
 	if (controlledTank)
 	{
-		const ATank* const playerTank = Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
+		APawn* const playerTank = GetWorld()->GetFirstPlayerController()->GetPawn();
 		if (playerTank)
 		{
+			MoveToActor(playerTank, AcceptanceRadius);
+
 			controlledTank->AimAt(playerTank->GetActorLocation());
+
 			controlledTank->Fire();
 		}
 	}

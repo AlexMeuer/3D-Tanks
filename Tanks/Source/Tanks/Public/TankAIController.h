@@ -21,4 +21,8 @@ public:
 	
 protected:
 	void AimTowardPlayerTank();
+
+private:
+	// How close can the AI tank ge tto the player.
+	const float AcceptanceRadius = 3000;
 };
