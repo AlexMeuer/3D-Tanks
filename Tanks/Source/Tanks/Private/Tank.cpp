@@ -40,6 +40,7 @@ void ATank::Fire()
 {
 	if (Barrel && IsReloaded())
 	{
+/*
 		const FName socketName("Projectile");
 
 		const auto projectile = GetWorld()->SpawnActor<AProjectile>(
@@ -49,7 +50,7 @@ void ATank::Fire()
 			);
 
 		projectile->Launch(LaunchSpeed);
-
+*/
 		LastFireTime = GetWorld()->GetTimeSeconds();
 
 		if (MuzzleFlash)

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Alexander Meuer
 
 #pragma once
 
@@ -26,10 +26,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = FlyByWire)
 	void IntendTurnRight(float axisThrow);
 
-	void RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed) override;
-
 private:
 	UTankTrack* LeftTrack = nullptr;
 	UTankTrack* RightTrack = nullptr;
 	
+
+	// Called from the pathfinding logic by the AI controllers.
+	void RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed) override;
 };
