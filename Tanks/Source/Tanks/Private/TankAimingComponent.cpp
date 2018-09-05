@@ -1,7 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Alexander Meuer
 
 #include "TankAimingComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "TankBarrel.h"
 #include "TankTurret.h"
 
@@ -15,15 +16,15 @@ UTankAimingComponent::UTankAimingComponent()
 	// ...
 }
 
-void UTankAimingComponent::SetMeshComponents(UTankBarrel* barrel, UTankTurret* turret)
+void UTankAimingComponent::Initialize(UTankBarrel* barrel, UTankTurret* turret, UParticleSystemComponent* muzzleFlash)
 {
 	Barrel = barrel;
 	Turret = turret;
 }
 
-void UTankAimingComponent::AimAt(FVector const & hitLocation, float launchSpeed)
+void UTankAimingComponent::AimAt(FVector const & hitLocation)
 {
-	if (!Barrel) { return; }
+	if (!ensure(Barrel && Turret)) { return; }
 
 	const FVector startLocation = Barrel->GetSocketLocation(FName("Projectile"));
 
@@ -33,7 +34,7 @@ void UTankAimingComponent::AimAt(FVector const & hitLocation, float launchSpeed)
 		launchVelocity,
 		startLocation,
 		hitLocation,
-		launchSpeed,
+		LaunchSpeed,
 		false,	// Favor lower arc
 		0.0f,	// No collision radius
 		0.0f,	// No gravity override
@@ -46,6 +47,8 @@ void UTankAimingComponent::AimAt(FVector const & hitLocation, float launchSpeed)
 
 void UTankAimingComponent::PointBarrelAt(FVector const & aimDirection)
 {
+	if (!ensure(Barrel && Turret)) { return; }
+
 	const auto barrelRotator = Barrel->GetForwardVector().ToOrientationRotator();
 	const auto aimRotator = aimDirection.ToOrientationRotator();
 	const auto deltaRotator = aimRotator - barrelRotator;

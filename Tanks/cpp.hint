@@ -1,0 +1,3 @@
+#define UCLASS()
+#define GENERATED_BODY()
+#define UFUNCTION()

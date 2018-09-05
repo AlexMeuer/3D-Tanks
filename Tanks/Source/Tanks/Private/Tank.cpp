@@ -5,40 +5,17 @@
 #include "Projectile.h"
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
-#include "Particles/ParticleSystemComponent.h"
-#include "TankAimingComponent.h"
-#include "TankMovementComponent.h"
 
 // Sets default values
-ATank::ATank() :
-	AimingComponent(CreateDefaultSubobject<UTankAimingComponent>(FName("Aiming Component")))
+ATank::ATank()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 }
 
-// Called to bind functionality to input
-void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
-
-// Called when the game starts or when spawned
-void ATank::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
-void ATank::AimAt(FVector const & location)
-{
-	AimingComponent->AimAt(location, LaunchSpeed);
-}
-
 void ATank::Fire()
 {
-	if (Barrel && IsReloaded())
+	if (IsReloaded())
 	{
 /*
 		const FName socketName("Projectile");
@@ -53,22 +30,11 @@ void ATank::Fire()
 */
 		LastFireTime = GetWorld()->GetTimeSeconds();
 
-		if (MuzzleFlash)
-		{
-			MuzzleFlash->ActivateSystem();
-		}
+		//if (MuzzleFlash)
+		//{
+		//	MuzzleFlash->ActivateSystem();
+		//}
 	}
-}
-
-void ATank::SetMeshComponents(UTankBarrel* barrel, UTankTurret* turret)
-{
-	AimingComponent->SetMeshComponents(barrel, turret);
-	Barrel = barrel;
-}
-
-void ATank::SetMuzzleFlash(UParticleSystemComponent* muzzleFlash)
-{
-	MuzzleFlash = muzzleFlash;
 }
 
 bool ATank::IsReloaded() const

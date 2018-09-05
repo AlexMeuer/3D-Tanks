@@ -6,8 +6,17 @@
 #include "Components/ActorComponent.h"
 #include "TankAimingComponent.generated.h"
 
+UENUM()
+enum class EFiringState : uint8
+{
+	Reloading,
+	Aiming,
+	Locked
+};
+
 class UTankBarrel;
 class UTankTurret;
+class UParticleSystemComponent;
 
 UCLASS( ClassGroup=(Tank), meta=(BlueprintSpawnableComponent) )
 class TANKS_API UTankAimingComponent : public UActorComponent
@@ -15,16 +24,24 @@ class TANKS_API UTankAimingComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
-	UTankAimingComponent();
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+	void Initialize(UTankBarrel* barrel, UTankTurret* turret, UParticleSystemComponent* muzzleFlash);
 
-	void SetMeshComponents(UTankBarrel* barrel, UTankTurret* turret);
+	void AimAt(FVector const & location);
 
-	void AimAt(FVector const & location, float launchSpeed);
+protected:
+	UPROPERTY(BlueprintReadOnly, Category = "Firing")
+	EFiringState FiringState = EFiringState::Reloading;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	float LaunchSpeed = 4000;
 
 private:	
 	UTankBarrel* Barrel = nullptr;
 	UTankTurret* Turret = nullptr;
+	UParticleSystemComponent* MuzzleFlash = nullptr;
+
+	UTankAimingComponent();
 
 	void PointBarrelAt(FVector const & aimDirection);
 };

@@ -17,13 +17,13 @@ class TANKS_API UTankMovementComponent : public UNavMovementComponent
 	GENERATED_BODY()
 	
 public:
-	UFUNCTION(BlueprintCallable, Category = Setup)
+	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void Initialize(UTankTrack* left, UTankTrack* right);
 
-	UFUNCTION(BlueprintCallable, Category = FlyByWire)
+	UFUNCTION(BlueprintCallable, Category = "FlyByWire")
 	void IntendMoveForward(float axisThrow);
 
-	UFUNCTION(BlueprintCallable, Category = FlyByWire)
+	UFUNCTION(BlueprintCallable, Category = "FlyByWire")
 	void IntendTurnRight(float axisThrow);
 
 private:

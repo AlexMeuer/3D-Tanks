@@ -7,6 +7,7 @@
 #include "TankAIController.generated.h"
 
 class ATank;
+class UTankAimingComponent;
 
 /**
  * 
@@ -18,9 +19,12 @@ class TANKS_API ATankAIController : public AAIController
 
 public:
 	virtual void Tick(float deltaTime) override;
-	
+
 protected:
 	void AimTowardPlayerTank();
+
+	UPROPERTY(BlueprintReadOnly)
+	UTankAimingComponent* AimingComponent = nullptr;
 
 private:
 	// How close can the AI tank ge tto the player.
