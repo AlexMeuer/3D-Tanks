@@ -17,6 +17,7 @@ enum class EFiringState : uint8
 class UTankBarrel;
 class UTankTurret;
 class UParticleSystemComponent;
+class AProjectile;
 
 UCLASS( ClassGroup=(Tank), meta=(BlueprintSpawnableComponent) )
 class TANKS_API UTankAimingComponent : public UActorComponent
@@ -29,7 +30,13 @@ public:
 
 	void AimAt(FVector const & location);
 
+	UFUNCTION(BlueprintCallable, Category = "Firing")
+	void Fire();
+
 protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<AProjectile> ProjectileBlueprint;
+
 	UPROPERTY(BlueprintReadOnly, Category = "Firing")
 	EFiringState FiringState = EFiringState::Reloading;
 
@@ -41,7 +48,14 @@ private:
 	UTankTurret* Turret = nullptr;
 	UParticleSystemComponent* MuzzleFlash = nullptr;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	float ReloadTimeInSeconds = 3.f;
+
+	float LastFireTime = 0.f;
+
 	UTankAimingComponent();
 
 	void PointBarrelAt(FVector const & aimDirection);
+
+	bool IsReloaded() const;
 };

@@ -1,9 +1,11 @@
 // Copyright Alexander Meuer
 
 #include "TankAimingComponent.h"
+#include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "TankBarrel.h"
+#include "Projectile.h"
 #include "TankTurret.h"
 
 // Sets default values for this component's properties
@@ -20,6 +22,7 @@ void UTankAimingComponent::Initialize(UTankBarrel* barrel, UTankTurret* turret, 
 {
 	Barrel = barrel;
 	Turret = turret;
+	MuzzleFlash = muzzleFlash;
 }
 
 void UTankAimingComponent::AimAt(FVector const & hitLocation)
@@ -45,14 +48,45 @@ void UTankAimingComponent::AimAt(FVector const & hitLocation)
 	}
 }
 
+void UTankAimingComponent::Fire()
+{
+	if (!ensure(Barrel && ProjectileBlueprint)) { return; }
+
+	if (IsReloaded())
+	{
+		
+		const FName socketName("Projectile");
+
+		const auto projectile = GetWorld()->SpawnActor<AProjectile>(
+		ProjectileBlueprint,
+		Barrel->GetSocketLocation(socketName),
+		Barrel->GetSocketRotation(socketName)
+		);
+
+		projectile->Launch(LaunchSpeed);
+
+		LastFireTime = GetWorld()->GetTimeSeconds();
+
+		if (MuzzleFlash)
+		{
+			MuzzleFlash->ActivateSystem();
+		}
+	}
+}
+
 void UTankAimingComponent::PointBarrelAt(FVector const & aimDirection)
 {
 	if (!ensure(Barrel && Turret)) { return; }
 
-	const auto barrelRotator = Barrel->GetForwardVector().ToOrientationRotator();
-	const auto aimRotator = aimDirection.ToOrientationRotator();
+	const auto barrelRotator = Barrel->GetForwardVector().Rotation();
+	const auto aimRotator = aimDirection.Rotation();
 	const auto deltaRotator = aimRotator - barrelRotator;
 
 	Barrel->Elevate( deltaRotator.Pitch );
 	Turret->Rotate ( deltaRotator.Yaw   );
+}
+
+bool UTankAimingComponent::IsReloaded() const
+{
+	return (GetWorld()->GetTimeSeconds() - LastFireTime) > ReloadTimeInSeconds;
 }

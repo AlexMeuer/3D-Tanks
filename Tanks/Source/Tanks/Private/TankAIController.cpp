@@ -29,7 +29,7 @@ void ATankAIController::AimTowardPlayerTank()
 				aimingComponent->AimAt(playerTank->GetActorLocation());
 			}
 
-			//controlledTank->Fire();
+			aimingComponent->Fire();
 		}
 	}
 }
